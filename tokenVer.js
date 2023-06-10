@@ -1,8 +1,10 @@
 import jwt from 'jsonwebtoken'
 
 export const verify=(req,res,next)=>{
-const token=req.cookies.access_token;
-
+//const token=req.cookies.access_token;
+const auth=req.headers.authorization
+if(auth){
+    const token=auth.split(" ")[1]
 //const auth=req.headers.authorization
 if(!token) return res.status(500).json('error token not exist')
 jwt.verify(token,process.env.JWT,(err,user)=>{
@@ -10,4 +12,6 @@ jwt.verify(token,process.env.JWT,(err,user)=>{
     req.user=user
     next()
 })
+}
+
 }
