@@ -12,8 +12,8 @@ export const register=async(req,res,next)=>{
     await NewUser.save()
     const token=jwt.sign({id:NewUser._id},process.env.JWT);
     const {password,...other}=NewUser._doc;
-    res.cookie('access_token',token,{ secure: true, httpOnly: true });
-    res.status(200).json(other);
+    res.cookie('access_token',token,{ secure: true, httpOnly: true ,sameSite: 'none'});
+    res.status(200).json({other,token});
     //res.status(200).json(NewUser)
         }else{
             res.status(500).json('user exist')
@@ -33,8 +33,15 @@ export const login=async(req,res,next)=>{
     }else{
         const token=jwt.sign({id:user._id},process.env.JWT);
         const {password,...other}=user._doc;
+
         res.cookie('access_token',token,{ secure: true, httpOnly: true });
         res.status(200).json({other,token});
+
+    res.cookie('access_token', token, {   secure: false, 
+  httpOnly: true,
+  sameSite: 'None' });
+        res.status(200).json({other,token});
+
     }
     }else{
         res.status(404).json('user not exist')
