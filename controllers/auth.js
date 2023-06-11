@@ -70,7 +70,7 @@ export const Google=async(req,res,next)=>{
                 httpOnly:true,
             })
             
-            res.status(200).json(other);
+            res.status(200).json({other,token});
         }else{
             const user=new User({...req.body,Google:true})
             const savedUser=await user.save()
@@ -78,7 +78,7 @@ export const Google=async(req,res,next)=>{
             const token=jwt.sign({id:savedUser._id},process.env.JWT)
             res.cookie('access_token',token,{
                 httpOnly:true,})
-                res.status(200).json(other)
+                res.status(200).json({other,token})
         }
     }catch(e){
         next(e)
